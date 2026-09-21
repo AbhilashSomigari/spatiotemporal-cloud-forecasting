@@ -1,0 +1,8 @@
+torch
+numpy
+xarray
+netCDF4
+opencv-python
+tqdm
+matplotlib
+pytest

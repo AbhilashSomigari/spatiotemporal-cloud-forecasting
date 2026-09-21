@@ -2,7 +2,15 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 
+
 class GOESSequenceDataset(Dataset):
+    """Sliding-window next-frame dataset over a memory-mapped GOES frame stack.
+
+    Expects a ``.npy`` file of shape (N, H, W) of frames normalized to [0, 1]
+    (see scripts/extract_frames.py). Each sample is a sequence of ``seq_len``
+    consecutive frames (x) and the frame immediately after it (y).
+    """
+
     def __init__(self, frames_path, seq_len=6, start_idx=0, end_idx=None):
         self.frames = np.load(frames_path, mmap_mode="r")
         self.seq_len = seq_len
@@ -19,10 +27,10 @@ class GOESSequenceDataset(Dataset):
     def __getitem__(self, idx):
         idx = self.start_idx + idx
 
-        x = self.frames[idx:idx + self.seq_len]          # (seq_len, H, W)
-        y = self.frames[idx + self.seq_len]              # (H, W)
+        x = self.frames[idx:idx + self.seq_len]   # (T, H, W)
+        y = self.frames[idx + self.seq_len]       # (H, W)
 
-        x = torch.tensor(x, dtype=torch.float32).unsqueeze(1)  # (seq_len, 1, H, W)
-        y = torch.tensor(y, dtype=torch.float32).unsqueeze(0)  # (1, H, W)
+        x = torch.tensor(np.array(x), dtype=torch.float32)             # (T, H, W)
+        y = torch.tensor(np.array(y), dtype=torch.float32).unsqueeze(0)  # (1, H, W)
 
         return x, y
