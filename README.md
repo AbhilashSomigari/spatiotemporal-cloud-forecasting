@@ -1,5 +1,8 @@
 # Spatiotemporal Cloud Forecasting
 
+[![CI](https://github.com/AbhilashSomigari/spatiotemporal-cloud-forecasting/actions/workflows/ci.yml/badge.svg)](https://github.com/AbhilashSomigari/spatiotemporal-cloud-forecasting/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 Next-frame forecasting of cloud movement from GOES satellite imagery. Given a
 sequence of past infrared brightness-temperature frames, predict the frame
 that follows. Includes a naive persistence baseline, a CNN that stacks input
@@ -82,3 +85,7 @@ pytest tests/
 
 Tests use synthetic random tensors/arrays, so they run without any raw
 satellite data.
+
+## License
+
+[MIT](LICENSE)
