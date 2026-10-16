@@ -1,0 +1,23 @@
+[
+  {
+    "model": "persistence",
+    "split": "test",
+    "frames_path": "processed/frames_128.npy",
+    "mae": 0.00630028125678384,
+    "mse": 0.00015118268086997314
+  },
+  {
+    "model": "simple_cnn",
+    "split": "test",
+    "frames_path": "processed/frames_128.npy",
+    "mae": 0.01893792980054552,
+    "mse": 0.0008614775742757921
+  },
+  {
+    "model": "convlstm",
+    "split": "test",
+    "frames_path": "processed/frames_128.npy",
+    "mae": 0.02551444388868273,
+    "mse": 0.001842858885277727
+  }
+]

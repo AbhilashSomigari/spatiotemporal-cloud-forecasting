@@ -31,8 +31,15 @@ def parse_args():
     parser.add_argument("--epochs", type=int, default=5)
     parser.add_argument("--lr", type=float, default=1e-4)
     parser.add_argument("--hidden-dim", type=int, default=32, help="ConvLSTM hidden channels.")
+    parser.add_argument("--residual", action="store_true", help="Predict the change from the last input frame.")
     parser.add_argument("--max-steps", type=int, default=None, help="Cap steps/epoch, for smoke-testing.")
     return parser.parse_args()
+
+
+def run_name(args):
+    if getattr(args, "residual", False) and args.model != "persistence":
+        return f"{args.model}_residual"
+    return args.model
 
 
 def get_device():
@@ -45,8 +52,8 @@ def get_device():
 
 def build_model(args):
     if args.model == "simple_cnn":
-        return SimpleCNNForecaster(in_channels=args.seq_len)
-    return ConvLSTMForecaster(input_dim=1, hidden_dim=args.hidden_dim)
+        return SimpleCNNForecaster(in_channels=args.seq_len, residual=args.residual)
+    return ConvLSTMForecaster(input_dim=1, hidden_dim=args.hidden_dim, residual=args.residual)
 
 
 @torch.no_grad()
@@ -80,7 +87,7 @@ def record_result(results_path, entry):
 
 def main():
     args = parse_args()
-    checkpoint_path = args.checkpoint_path or f"models/{args.model}.pth"
+    checkpoint_path = args.checkpoint_path or f"models/{run_name(args)}.pth"
     os.makedirs(os.path.dirname(checkpoint_path) or ".", exist_ok=True)
 
     device = get_device()
@@ -136,7 +143,7 @@ def main():
     print(f"Final test | mae={test_mae:.6f} | mse={test_mse:.6f}")
 
     record_result(args.results_path, {
-        "model": args.model,
+        "model": run_name(args),
         "split": "test",
         "frames_path": args.frames_path,
         "mae": test_mae,

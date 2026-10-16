@@ -1,0 +1,26 @@
+Using device: mps
+persistence [test] | mae=0.006300 | mse=0.000151
+Using device: mps
+Epoch 1/5 | train_loss=0.015119 | val_mae=0.034897 | val_mse=0.003089
+Saved best model to models/simple_cnn.pth
+Epoch 2/5 | train_loss=0.001670 | val_mae=0.023899 | val_mse=0.001420
+Saved best model to models/simple_cnn.pth
+Epoch 3/5 | train_loss=0.001155 | val_mae=0.022177 | val_mse=0.001127
+Saved best model to models/simple_cnn.pth
+Epoch 4/5 | train_loss=0.000947 | val_mae=0.018686 | val_mse=0.000865
+Saved best model to models/simple_cnn.pth
+Epoch 5/5 | train_loss=0.000817 | val_mae=0.017885 | val_mse=0.000753
+Saved best model to models/simple_cnn.pth
+Final test | mae=0.018938 | mse=0.000861
+Using device: mps
+Epoch 1/5 | train_loss=0.021668 | val_mae=0.069839 | val_mse=0.011581
+Saved best model to models/convlstm.pth
+Epoch 2/5 | train_loss=0.008390 | val_mae=0.048969 | val_mse=0.006006
+Saved best model to models/convlstm.pth
+Epoch 3/5 | train_loss=0.002906 | val_mae=0.030516 | val_mse=0.002335
+Saved best model to models/convlstm.pth
+Epoch 4/5 | train_loss=0.001910 | val_mae=0.029696 | val_mse=0.002029
+Saved best model to models/convlstm.pth
+Epoch 5/5 | train_loss=0.001783 | val_mae=0.027919 | val_mse=0.001880
+Saved best model to models/convlstm.pth
+Final test | mae=0.025514 | mse=0.001843

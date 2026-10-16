@@ -29,7 +29,14 @@ def parse_args():
     parser.add_argument("--seq-len", type=int, default=6)
     parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument("--hidden-dim", type=int, default=32, help="ConvLSTM hidden channels.")
+    parser.add_argument("--residual", action="store_true", help="Predict the change from the last input frame.")
     return parser.parse_args()
+
+
+def run_name(args):
+    if getattr(args, "residual", False) and args.model != "persistence":
+        return f"{args.model}_residual"
+    return args.model
 
 
 def get_device():
@@ -42,11 +49,11 @@ def get_device():
 
 def build_model(args, device):
     if args.model == "simple_cnn":
-        model = SimpleCNNForecaster(in_channels=args.seq_len)
+        model = SimpleCNNForecaster(in_channels=args.seq_len, residual=args.residual)
     else:
-        model = ConvLSTMForecaster(input_dim=1, hidden_dim=args.hidden_dim)
+        model = ConvLSTMForecaster(input_dim=1, hidden_dim=args.hidden_dim, residual=args.residual)
 
-    checkpoint_path = args.checkpoint_path or f"models/{args.model}.pth"
+    checkpoint_path = args.checkpoint_path or f"models/{run_name(args)}.pth"
     model.load_state_dict(torch.load(checkpoint_path, map_location=device))
     return model.to(device)
 
@@ -98,7 +105,7 @@ def main():
     print(f"{args.model} [{args.split}] | mae={mae:.6f} | mse={mse:.6f}")
 
     record_result(args.results_path, {
-        "model": args.model,
+        "model": run_name(args),
         "split": args.split,
         "frames_path": args.frames_path,
         "mae": mae,

@@ -36,12 +36,17 @@ class ConvLSTMCell(nn.Module):
 
 
 class ConvLSTMForecaster(nn.Module):
-    """Rolls a ConvLSTM cell over T input frames and predicts the next frame."""
+    """Rolls a ConvLSTM cell over T input frames and predicts the next frame.
 
-    def __init__(self, input_dim=1, hidden_dim=32, kernel_size=3):
+    With ``residual=True`` the head predicts the change from the last input
+    frame; it starts at zero, so an untrained model equals persistence.
+    """
+
+    def __init__(self, input_dim=1, hidden_dim=32, kernel_size=3, residual=False):
         super().__init__()
 
         self.hidden_dim = hidden_dim
+        self.residual = residual
         self.cell = ConvLSTMCell(
             input_dim=input_dim,
             hidden_dim=hidden_dim,
@@ -52,8 +57,11 @@ class ConvLSTMForecaster(nn.Module):
             nn.Conv2d(hidden_dim, 16, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.Conv2d(16, 1, kernel_size=3, padding=1),
-            nn.Sigmoid(),  # frames are normalized to [0, 1]
+            nn.Identity() if residual else nn.Sigmoid(),  # frames are normalized to [0, 1]
         )
+        if residual:
+            nn.init.zeros_(self.output_conv[2].weight)
+            nn.init.zeros_(self.output_conv[2].bias)
 
     def forward(self, x):
         # x: (B, T, H, W) -> add a channel dim for the recurrent cell
@@ -67,4 +75,7 @@ class ConvLSTMForecaster(nn.Module):
         for t in range(T):
             h, c = self.cell(x[:, t], h, c)
 
-        return self.output_conv(h)  # (B, 1, H, W)
+        out = self.output_conv(h)  # (B, 1, H, W)
+        if self.residual:
+            return (x[:, -1] + out).clamp(0, 1)
+        return out

@@ -61,6 +61,12 @@ pip install -r requirements.txt
    python -m training.train --model convlstm --frames-path processed/frames.npy --hidden-dim 32
    ```
 
+   Add `--residual` to predict the change from the last input frame instead of
+   the frame itself. The output layer starts at zero, so an untrained model is
+   exactly the persistence baseline. Checkpoints and results are saved under
+   `<model>_residual`. At 5-minute steps the absolute-frame models lose to
+   persistence, while the residual ones beat it.
+
    Checkpoints save to `models/<model>.pth` (best val MSE), and final test
    metrics are appended to `outputs/results.json`.
 

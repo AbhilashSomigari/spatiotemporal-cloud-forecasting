@@ -1,0 +1,37 @@
+[
+  {
+    "model": "persistence",
+    "split": "test",
+    "frames_path": "processed/frames_128.npy",
+    "mae": 0.00630028125678384,
+    "mse": 0.00015118268086997314
+  },
+  {
+    "model": "simple_cnn_residual",
+    "split": "test",
+    "frames_path": "processed/frames_128.npy",
+    "mae": 0.004093308341075745,
+    "mse": 5.7752809386660686e-05
+  },
+  {
+    "model": "convlstm_residual",
+    "split": "test",
+    "frames_path": "processed/frames_128.npy",
+    "mae": 0.0049981928336643435,
+    "mse": 8.933570113235204e-05
+  },
+  {
+    "model": "simple_cnn",
+    "split": "test",
+    "frames_path": "processed/frames_128.npy",
+    "mae": 0.011322877434797065,
+    "mse": 0.00041707071530733747
+  },
+  {
+    "model": "convlstm",
+    "split": "test",
+    "frames_path": "processed/frames_128.npy",
+    "mae": 0.016899770212381385,
+    "mse": 0.0008033389404286133
+  }
+]

@@ -39,3 +39,12 @@ def test_split_ranges_cover_all_frames():
     assert ranges["train"][0] == 0
     assert ranges["test"][1] == 100
     assert ranges["train"][1] <= ranges["val"][1] <= ranges["test"][1]
+
+
+def test_untrained_residual_models_equal_persistence():
+    x = torch.rand(2, 6, 32, 32)
+    for model in (SimpleCNNForecaster(in_channels=6, residual=True),
+                  ConvLSTMForecaster(input_dim=1, hidden_dim=8, residual=True)):
+        out = model(x)
+        assert out.shape == (2, 1, 32, 32)
+        assert torch.equal(out, x[:, -1:])
